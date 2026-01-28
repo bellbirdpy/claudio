@@ -1,0 +1,75 @@
+#!/command/with-contenv bash
+# Generate moltbot gateway configuration
+
+set -e
+
+# Set HOME to moltbot's home so .profile uses correct paths
+export HOME=/home/moltbot
+
+# Source moltbot profile for PATH setup
+. /home/moltbot/.profile
+
+# Load nvm (needed for moltbot command)
+export NVM_DIR="/home/moltbot/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  echo "[generate-config] nvm loaded successfully"
+else
+  echo "[generate-config] ERROR: nvm.sh not found at $NVM_DIR/nvm.sh" >&2
+  exit 1
+fi
+
+# Ensure state directory exists with correct ownership
+mkdir -p "$MOLTBOT_STATE_DIR"
+chown moltbot:moltbot "$MOLTBOT_STATE_DIR"
+
+DEFAULT_CONFIG="/etc/moltbot/moltbot.default.json"
+CONFIG_FILE="$MOLTBOT_STATE_DIR/moltbot.json"
+
+echo "[generate-config] Building config: $CONFIG_FILE"
+
+# Show version
+echo "[generate-config] Checking moltbot installation..."
+if ! command -v moltbot >/dev/null 2>&1; then
+  echo "[generate-config] ERROR: moltbot command not found in PATH" >&2
+  echo "[generate-config] PATH: $PATH" >&2
+  echo "[generate-config] Node version: $(node --version 2>&1 || echo 'not found')" >&2
+  exit 1
+fi
+echo "[generate-config] Moltbot version: $(moltbot --version 2>/dev/null || echo 'unknown')"
+
+# Generate a gateway token if not provided
+if [ -z "$MOLTBOT_GATEWAY_TOKEN" ]; then
+  export MOLTBOT_GATEWAY_TOKEN=$(head -c 32 /dev/urandom | base64 | tr -d '=/+' | head -c 32)
+  echo "[generate-config] Generated gateway token (ephemeral)"
+  # Write to s6 environment so services can access it
+  mkdir -p /run/s6/container_environment
+  echo "$MOLTBOT_GATEWAY_TOKEN" > /run/s6/container_environment/MOLTBOT_GATEWAY_TOKEN
+fi
+
+# Start with default config as base
+if [ -f "$DEFAULT_CONFIG" ]; then
+  cp "$DEFAULT_CONFIG" "$CONFIG_FILE"
+  echo "[generate-config] Using default config from $DEFAULT_CONFIG"
+else
+  # Fallback minimal config if default doesn't exist
+  echo '{"gateway": {"mode": "local"}}' > "$CONFIG_FILE"
+  echo "[generate-config] Warning: Default config not found, using minimal config"
+fi
+
+# Add Gradient AI provider if API key is set
+if [ -n "$GRADIENT_API_KEY" ]; then
+  echo "[generate-config] Adding Gradient AI provider to config"
+
+  # Merge Gradient config into main config, injecting the API key
+  jq --argjson gradient "$CONFIG_FILE" \
+     --arg apiKey "$GRADIENT_API_KEY" \
+     '. * $gradient | .models.providers.gradient.apiKey = $apiKey' \
+     "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+fi
+
+# Ensure moltbot owns all state files
+chown -R moltbot:moltbot "$MOLTBOT_STATE_DIR"
+
+echo "[generate-config] Final config:"
+jq '.' "$CONFIG_FILE"

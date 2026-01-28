@@ -1,0 +1,25 @@
+#!/command/with-contenv bash
+# Periodic prune service using restic
+
+# Source s6 container environment (ensures vars are available)
+for f in /run/s6/container_environment/*; do
+  [ -f "$f" ] && export "$(basename $f)"="$(cat $f)"
+done
+
+CONFIG_FILE="/etc/moltbot/backup.yaml"
+
+# Skip if persistence not configured
+if [ -z "$RESTIC_REPOSITORY" ] || [ -z "$RESTIC_PASSWORD" ]; then
+  echo "[prune] Persistence not configured, service disabled"
+  s6-svc -Od .
+  exit 0
+fi
+
+# Read prune interval from config (default 6 hours)
+PRUNE_INTERVAL=$(yq -r '.prune_interval_seconds // 21600' "$CONFIG_FILE")
+echo "[prune] Starting prune loop (every ${PRUNE_INTERVAL}s)..."
+
+while true; do
+  sleep "$PRUNE_INTERVAL"
+  /usr/local/bin/restic-prune
+done

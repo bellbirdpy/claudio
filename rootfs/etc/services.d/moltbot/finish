@@ -1,0 +1,6 @@
+#!/command/with-contenv bash
+# Graceful shutdown - save state before exit
+
+echo "[moltbot] Service stopping, saving state..."
+/usr/local/bin/restic-backup --quiet
+echo "[moltbot] State saved"

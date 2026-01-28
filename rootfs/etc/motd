@@ -1,0 +1,14 @@
+
+  __  __       _ _   _           _   
+ |  \/  | ___ | | |_| |__   ___ | |_ 
+ | |\/| |/ _ \| | __| '_ \ / _ \| __|
+ | |  | | (_) | | |_| |_) | (_) | |_ 
+ |_|  |_|\___/|_|\__|_.__/ \___/ \__|
+                                      
+  Moltbot App Platform Container
+  https://github.com/digitalocean-labs/clawdbot-appplatform
+
+
+To get a shell as the moltbot user, use `sudo -i -u moltbot bash`
+
+You can use `marbot` cli directly from here.

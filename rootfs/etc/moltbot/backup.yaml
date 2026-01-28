@@ -1,0 +1,41 @@
+# Moltbot Backup Configuration
+# Users can override this file in their rootfs/etc/moltbot/backup.yaml
+
+# Restic repository location (S3-compatible)
+# Environment variables are expanded at runtime
+repository: "s3:${SPACES_ENDPOINT}/${SPACES_BUCKET}/${TS_HOSTNAME}/restic"
+# Backup paths with per-path exclusions
+# Order matters for restore: /etc is restored first after packages
+paths:
+  - path: /etc
+  - path: /root
+  - path: /data/.moltbot
+    exclude:
+      - "*.sqlite*"
+      - "*.db*"
+      - "*.lock"
+      - "*.pid"
+      - "*.sock"
+
+
+  - path: /data/tailscale
+
+  - path: /home
+    exclude:
+      - "*.sqlite*"
+      - "*.db*"
+      - "*.lock"
+      - "*.pid"
+      - "*.sock"
+
+# Global settings
+backup_interval_seconds: 30
+prune_interval_seconds: 21600  # 6 hours
+
+# Retention policy (for restic forget)
+retention:
+  keep_last: 10
+  keep_hourly: 48
+  keep_daily: 30
+  keep_weekly: 8
+  keep_monthly: 6
