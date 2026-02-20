@@ -10,7 +10,7 @@ workers:
     github:
       branch: main
       deploy_on_push: true
-      repo: digitalocean-labs/openclaw-appplatform
+      repo: bellbirdpy/claudio
     envs:
       # ============================================================
       # REQUIRED
@@ -28,7 +28,7 @@ workers:
       # ============================================================
       - key: ENABLE_NGROK
         scope: RUN_TIME
-        value: "false"
+        value: "true"
       - key: TAILSCALE_ENABLE
         scope: RUN_TIME
         value: "false"
