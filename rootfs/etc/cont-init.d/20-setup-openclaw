@@ -104,10 +104,10 @@ if [ "${ENABLE_UI:-true}" = "false" ]; then
   jq '.gateway.controlUi.enabled = false' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
 fi
 
-# Add Tailscale config when enabled
+# Add Tailscale config when enabled (HTTP mode with token auth, no tailscale serve)
 if [ "${TAILSCALE_ENABLE:-false}" = "true" ]; then
-  echo "[generate-config] Adding Tailscale serve config"
-  jq '.gateway.tailscale.resetOnExit = true | .gateway.tailscale.mode = "serve" | .gateway.auth.allowTailscale = true' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+  echo "[generate-config] Adding Tailscale config (HTTP + token auth)"
+  jq '.gateway.tailscale.resetOnExit = true' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
 fi
 
 # Add gateway auth token to config
