@@ -88,6 +88,8 @@ RUN set -eux; \
   apt-get clean; \
   rm -rf /var/lib/apt/lists/*
 
+# Bust cache when rootfs changes (Kaniko may not detect file content changes)
+ARG ROOTFS_VERSION=2
 # Apply rootfs overlay early - allows user creation to use existing home directories
 COPY rootfs/ /
 
