@@ -37,9 +37,7 @@
                         "reasoning": true,
                         "input": [
                             "text",
-                            "image",
-                            "audio",
-                            "video"
+                            "image"
                         ],
                         "contextWindow": 1048576,
                         "maxTokens": 65536
