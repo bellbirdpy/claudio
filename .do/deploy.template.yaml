@@ -1,8 +1,8 @@
 spec:
-  name: openclaw
-  region: tor
+  name: claudio
+  region: fra
   workers:
-    - name: openclaw
+    - name: claudio
       dockerfile_path: /Dockerfile
       source_dir: /
       instance_count: 1
@@ -12,7 +12,7 @@ spec:
         repo_clone_url: https://github.com/digitalocean-labs/openclaw-appplatform.git
       envs:
         # Provide your Gradient inference key
-        - key: GRADIENT_API_KEY
+        - key: GEMINI_API_KEY
           scope: RUN_TIME
           type: SECRET
 
@@ -22,7 +22,7 @@ spec:
           type: SECRET
         - key: STABLE_HOSTNAME
           scope: RUN_TIME
-          value: openclaw
+          value: claudio
 
         # Feature flags
         - key: ENABLE_NGROK
@@ -57,18 +57,15 @@ spec:
           type: SECRET
         - key: RESTIC_SPACES_ENDPOINT
           scope: RUN_TIME
-          value: tor1.digitaloceanspaces.com
+          value: fra1.digitaloceanspaces.com
         - key: RESTIC_SPACES_BUCKET
           scope: RUN_TIME
-          value: openclaw-backup
+          value: claudio-backup
         - key: RESTIC_PASSWORD
           scope: RUN_TIME
           type: SECRET
 
         # Optional
-        - key: OPENCLAW_GATEWAY_TOKEN
-          scope: RUN_TIME
-          type: SECRET
         - key: SSH_ENABLE
           scope: RUN_TIME
           value: "false"

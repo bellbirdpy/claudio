@@ -1,8 +1,8 @@
-name: openclaw
-region: tor # Available: nyc, ams, sfo, sgp, lon, fra, blr, syd, tor
+name: claudio
+region: fra # Available: nyc, ams, sfo, sgp, lon, fra, blr, syd, tor
 
 workers:
-  - name: openclaw
+  - name: claudio
     dockerfile_path: /Dockerfile
     source_dir: /
     instance_count: 1
@@ -20,7 +20,7 @@ workers:
         type: SECRET
       - key: STABLE_HOSTNAME
         scope: RUN_TIME
-        value: openclaw
+        value: claudio
 
       # ============================================================
       # FEATURE FLAGS
@@ -31,10 +31,10 @@ workers:
         value: "true"
       - key: TAILSCALE_ENABLE
         scope: RUN_TIME
-        value: "false"
+        value: "true"
       - key: ENABLE_SPACES
         scope: RUN_TIME
-        value: "false"
+        value: "true"
       - key: ENABLE_UI
         scope: RUN_TIME
         value: "true"
@@ -71,10 +71,10 @@ workers:
         type: SECRET
       - key: RESTIC_SPACES_ENDPOINT
         scope: RUN_TIME
-        value: tor1.digitaloceanspaces.com
+        value: fra1.digitaloceanspaces.com
       - key: RESTIC_SPACES_BUCKET
         scope: RUN_TIME
-        value: openclaw-backup
+        value: claudio-backup
       - key: RESTIC_PASSWORD
         scope: RUN_TIME
         type: SECRET
@@ -82,15 +82,12 @@ workers:
       # ============================================================
       # OPTIONAL
       # ============================================================
-      - key: OPENCLAW_GATEWAY_TOKEN
-        scope: RUN_TIME
-        type: SECRET
-      - key: GRADIENT_API_KEY
+      - key: GEMINI_API_KEY
         scope: RUN_TIME
         type: SECRET
       - key: SSH_ENABLE
         scope: RUN_TIME
-        value: "false"
+        value: "true"
       - key: GITHUB_USERNAME
         scope: RUN_TIME
         value: ""

@@ -7,7 +7,7 @@ source_env_prefix OPENCLAW_
 
 # OpenClaw requires any env vars consumed in config to exist or else it fails to start.
 persist_env_var OPENCLAW_ \
-  GRADIENT_API_KEY=change-me \
+  GEMINI_API_KEY=change-me \
   TAILSCALE_ENABLE="${TAILSCALE_ENABLE:-false}" \
   TS_SOCKET="${TS_SOCKET}" \
   TS_EXTRA_ARGS="${TS_EXTRA_ARGS}" \

@@ -1,9 +1,9 @@
 services:
-  openclaw-gateway:
-    image: ${IMAGE:-openclaw-test:latest}
+  claudio:
+    image: ${IMAGE:-claudio:latest}
     build:
       context: .
       dockerfile: Dockerfile
     platform: ${PLATFORM:-linux/amd64}
-    container_name: ${STABLE_HOSTNAME:-openclaw-test}
+    container_name: ${STABLE_HOSTNAME:-claudio}
     env_file: .env
