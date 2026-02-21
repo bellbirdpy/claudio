@@ -89,9 +89,12 @@ RUN set -eux; \
   rm -rf /var/lib/apt/lists/*
 
 # Bust cache when rootfs changes (Kaniko may not detect file content changes)
-ARG ROOTFS_VERSION=2
+ARG ROOTFS_VERSION=3
 # Apply rootfs overlay early - allows user creation to use existing home directories
 COPY rootfs/ /
+
+# Keep a pristine copy of default config in /opt (Restic restores /etc and may overwrite it)
+RUN mkdir -p /opt/openclaw && cp /etc/openclaw/openclaw.default.json /opt/openclaw/
 
 # Apply build-time permissions from config
 RUN source /etc/s6-overlay/lib/env-utils.sh && apply_permissions

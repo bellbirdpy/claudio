@@ -82,8 +82,14 @@ fi
 persist_env_var OPENCLAW_ OPENCLAW_GATEWAY_TOKEN="$OPENCLAW_GATEWAY_TOKEN"
 echo "[generate-config] Gateway token configured (OPENCLAW_GATEWAY_TOKEN)"
 
+# Use default config from /opt (not restored by Restic, always from Docker image)
+DOCKER_DEFAULT_CONFIG="/opt/openclaw/openclaw.default.json"
+
 # Start with default config as base
-if [ -f "$DEFAULT_CONFIG" ]; then
+if [ -f "$DOCKER_DEFAULT_CONFIG" ]; then
+  cp "$DOCKER_DEFAULT_CONFIG" "$CONFIG_FILE"
+  echo "[generate-config] Using default config from $DOCKER_DEFAULT_CONFIG"
+elif [ -f "$DEFAULT_CONFIG" ]; then
   cp "$DEFAULT_CONFIG" "$CONFIG_FILE"
   echo "[generate-config] Using default config from $DEFAULT_CONFIG"
 else
