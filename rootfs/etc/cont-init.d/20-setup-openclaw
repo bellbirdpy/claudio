@@ -107,7 +107,7 @@ fi
 # Add Tailscale config when enabled (HTTP mode with token auth, no tailscale serve)
 if [ "${TAILSCALE_ENABLE:-false}" = "true" ]; then
   echo "[generate-config] Adding Tailscale config (HTTP + token auth)"
-  jq '.gateway.tailscale.resetOnExit = true' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+  jq '.gateway.tailscale.resetOnExit = true | .gateway.trustedProxies = ["0.0.0.0/0"]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
 fi
 
 # Add gateway auth token to config
