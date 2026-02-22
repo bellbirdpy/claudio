@@ -107,7 +107,7 @@ fi
 # Add Tailscale config when enabled (HTTPS via tailscale serve)
 if [ "${TAILSCALE_ENABLE:-false}" = "true" ]; then
   echo "[generate-config] Adding Tailscale config (serve mode + HTTPS)"
-  jq '.gateway.tailscale.resetOnExit = true | .gateway.tailscale.mode = "serve" | .gateway.trustedProxies = ["0.0.0.0/0"]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+  jq '.gateway.tailscale.resetOnExit = true | .gateway.tailscale.mode = "serve" | .gateway.trustedProxies = ["127.0.0.0/8"] | .gateway.controlUi.allowInsecureAuth = true' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
 fi
 
 # Add gateway auth token to config
