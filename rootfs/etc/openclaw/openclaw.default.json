@@ -26,10 +26,10 @@
     "models": {
         "mode": "merge",
         "providers": {
-            "gemini": {
-                "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+            "google": {
+                "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
                 "apiKey": "${GEMINI_API_KEY}",
-                "api": "openai-completions",
+                "api": "google-generative-ai",
                 "models": [
                     {
                         "id": "gemini-3.1-pro-preview",
@@ -37,7 +37,9 @@
                         "reasoning": true,
                         "input": [
                             "text",
-                            "image"
+                            "image",
+                            "audio",
+                            "video"
                         ],
                         "contextWindow": 1048576,
                         "maxTokens": 65536
@@ -49,7 +51,7 @@
     "agents": {
         "defaults": {
             "model": {
-                "primary": "gemini/gemini-3.1-pro-preview"
+                "primary": "google/gemini-3.1-pro-preview"
             }
         }
     }
