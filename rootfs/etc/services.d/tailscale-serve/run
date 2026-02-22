@@ -1,0 +1,24 @@
+#!/command/with-contenv bash
+# Tailscale HTTPS serve - exposes gateway port via Tailscale serve for device identity
+source /etc/s6-overlay/lib/env-utils.sh
+source_env_prefix TS_
+
+if [ "${TAILSCALE_ENABLE:-false}" != "true" ]; then
+  echo "[tailscale-serve] Disabled"
+  s6-svc -Od .
+  exit 0
+fi
+
+echo "[tailscale-serve] Waiting for Tailscale to connect..."
+until tailscale status >/dev/null 2>&1; do
+  sleep 2
+done
+
+echo "[tailscale-serve] Tailscale connected, enabling HTTPS serve on port 18789"
+tailscale serve --bg --yes 18789
+
+# Keep service alive (s6 expects long-running process)
+echo "[tailscale-serve] HTTPS serve active, monitoring..."
+while tailscale status >/dev/null 2>&1; do
+  sleep 30
+done
