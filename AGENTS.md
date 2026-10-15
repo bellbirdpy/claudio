@@ -88,7 +88,7 @@ Optional DO Spaces backup via [Restic](https://restic.net/) when `ENABLE_SPACES=
 
 ## Testing
 
-See `tests/CLAUDE.md` for test system details. Run locally with `make rebuild` before pushing.
+See `tests/AGENTS.md` for test system details. Run locally with `make rebuild` before pushing.
 
 ## Gotchas
 
